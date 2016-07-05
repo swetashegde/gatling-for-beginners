@@ -1,16 +1,18 @@
 # System setup steps
-
  
- 
-
 ### System requirements
-1. Java.
-2. Gradle - We are using gradle build tool for this project.
-3. Any IDE - to make life simpler. We are using Intellij.
-4. Add Scala plug in.
+1. Homebrew (Package Manager for Mac)
+2. Java.
+3. Gradle - We are using gradle build tool for this project.
+4. Any IDE - to make life simpler. We are using Intellij.
+5. Add Scala plug in.
 
 ## Steps for setting up Macs
-##### 1. Install Java and have $JAVA_HOME set.
+##### 1. Install Homebrew
+Run this command on the terminal:
+```/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"```
+
+##### 2. Install Java and set $JAVA_HOME
 If you do not have java on your system refer https://java.com/en/download/help/mac_install.xml to install the same.
 You can get JDK using Homebrew cask.
 
@@ -46,7 +48,7 @@ $ echo $JAVA_HOME
 to see if the $JAVA_HOME is set.
 
 
-##### 2. Install gradle
+##### 3. Install gradle
 We have installed using homebrew
 
 ```sh
@@ -54,8 +56,8 @@ $ brew install gradle
 ```
 
 
-##### 3. Install the IDE
+##### 4. Install the IDE
 We have used community edition of Intellij from https://www.jetbrains.com/idea/
 
 
-##### 4. Add Scala plugin to IDE
+##### 5. Add Scala plugin to IDE
