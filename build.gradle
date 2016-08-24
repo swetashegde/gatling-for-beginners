@@ -1,32 +1,66 @@
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
+apply plugin: 'scala'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+
+
+
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile 'org.scala-lang:scala-library:2.11.7'
+    testCompile 'io.gatling.highcharts:gatling-charts-highcharts:2.1.+'
+}
+
+
+sourceSets {
+    test {
+        scala {
+            srcDir 'src'
         }
-    }
-    dependencies {
-        classpath "gradle.plugin.com.github.lkishalmi.gradle:gradle-gatling-plugin:0.3.0"
     }
 }
 
-allprojects {
-    apply plugin: "scala"
-    apply plugin: "com.github.lkishalmi.gatling"
 
-    gatling {
-        toolVersion = '2.2.0'
-        simulations = {
-            include "**/*Simulation.scala"
+//Task Run all Gatling Tests
+task gatling(dependsOn: 'compileTestScala') << {
+
+    def absPath = System.getProperty("user.dir");
+
+    // target/test-classes is required by gatling to be run
+    def targetTestClassesFolder = new File(absPath, 'target/test-classes')
+    targetTestClassesFolder.mkdirs()
+
+    // create build/reports folder
+    def targetReportsFolder = new File(project.buildDir.absolutePath, '/reports')
+    targetReportsFolder.mkdirs()
+
+
+    logger.lifecycle(" ---- Executing all Gatling Simulations from: ${sourceSets.test.output.classesDir} ----")
+
+    sourceSets.test.output.classesDir.eachFileRecurse { file ->
+        if (file.isFile()) {
+
+            def gatlingScenarioClass = (file.getPath() - (sourceSets.test.output.classesDir.getPath() + File.separator) - '.class')
+                    .replace(File.separator, '.')
+
+            def foundGatlingSim = gatlingScenarioClass.lastIndexOf("Simulation");
+
+            if (foundGatlingSim > 0) {
+                javaexec {
+                    main = 'io.gatling.app.Gatling'
+                    classpath = sourceSets.test.output + sourceSets.test.runtimeClasspath
+                    args '-sf', sourceSets.test.output.classesDir,
+                            '-s', gatlingScenarioClass,
+                            '-rf', project.buildDir.absolutePath + '/reports/'
+                }
+            }
         }
     }
 
-    repositories {
-        mavenLocal()
-        mavenCentral()
-    }
 
-    dependencies {
-        compile 'io.gatling:gatling-core:2.2.2'
-        compile 'io.gatling.highcharts:gatling-charts-highcharts:2.1.+'
-    }
+    logger.lifecycle(" ---- Done executing all Gatling scenarios ----")
 }
