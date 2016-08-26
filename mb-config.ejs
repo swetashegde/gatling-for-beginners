@@ -1,0 +1,86 @@
+{
+  "imposters": [{
+    "port": 5555,
+    "protocol": "http",
+    "name": "origin",
+    "stubs": [
+    {
+
+        "predicates": [{
+          "and": [{
+            "equals": {
+              "method": "GET",
+              "path": "/search",
+              "headers": {
+                "Content-Type": "application/json",
+               "token": "1234abcd"
+            }
+            }
+          }]
+        }],
+        "responses": [{
+          "is": {
+            "body": "Hey! I got your search request!"
+          }
+        }]
+      },
+
+      {
+        "predicates": [{
+          "and": [{
+            "equals": {
+              "path": "/login",
+              "method": "POST",
+              "headers": {
+                "Content-Type": "application/json"
+              },
+              "query": {
+                "username": "user1",
+                "password": "password123"
+              }
+
+            }
+          }]
+        }],
+
+        "responses": [{
+          "is": {
+            "body": {
+              "status": "Login Success!"
+            },
+            "statusCode": 200,
+            "headers": {
+              "Content-Type": "application/json",
+              "token": "1234abcd"
+            }
+
+          }
+        }]
+      },
+
+      {
+        "predicates": [{
+         "and": [{
+            "equals": {
+              "method": "GET",
+              "path": "/home",
+              "headers": {
+                "Content-Type": "application/json",
+               "token": "1234abcd"
+            }
+            }
+            }]
+        }],
+        "responses": [{
+          "is": {
+            "statusCode": 200,
+            "body":{
+            "status":"You are allowed to proceed"}
+          }
+
+
+        }]
+      }
+    ]
+  }]
+}
