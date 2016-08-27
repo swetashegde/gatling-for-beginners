@@ -5,7 +5,7 @@ import io.gatling.http.Predef._
 
 object GoogleQuery {
   val query = http("Google")
-    .get("/serach")
+    .get("/search")
     .check(status.is(200))
 
 }
